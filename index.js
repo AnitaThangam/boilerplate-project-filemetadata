@@ -5,23 +5,26 @@ const multer = require('multer');
 
 require('dotenv').config();
 
-app.use(cors());
-app.use(express.static('public'));
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/views/index.html');
+app.use(cors());
+app.use('/public', express.static(process.cwd() + '/public'));
+
+app.get('/', function(req, res) {
+  res.sendFile(process.cwd() + '/views/index.html');
 });
 
-const upload = multer({ dest: 'uploads/' });
+app.post('/api/fileanalyse', upload.single('upfile'), function(req, res) {
 
-app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
   res.json({
     name: req.file.originalname,
     type: req.file.mimetype,
     size: req.file.size
   });
+
 });
 
-const listener = app.listen(process.env.PORT || 3000, () => {
+const listener = app.listen(process.env.PORT || 3000, function() {
   console.log('Your app is listening on port ' + listener.address().port);
 });
