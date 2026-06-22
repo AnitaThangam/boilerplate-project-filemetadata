@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-const upload = multer({ dest: 'uploads/' });
+const upload = multer();
 
 app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
 
