@@ -12,19 +12,16 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({ dest: 'uploads/' });
 
 app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
-  if (!req.file) {
-    return res.json({ error: 'No file uploaded' });
-  }
-
-  return res.json({
+  res.json({
     name: req.file.originalname,
     type: req.file.mimetype,
-    size: Number(req.file.size)
+    size: req.file.size
   });
 });
+
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port);
 });
